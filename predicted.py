@@ -14,27 +14,46 @@ import scipy
 import re
 from scipy.sparse import csr_matrix
 from scipy import sparse
+from collections import Counter
+import math
+from sklearn.ensemble import RandomForestClassifier
 
+def get_domain_legnth(domain_list):
+  y = []
+  for domain in domain_list:
+    lenDomain = len(domain)
+    y.append(lenDomain)
+  return y
+
+def calShanon(domain_list):
+  y = []
+  for domain in domain_list:
+    lenDomain = len(domain)
+    f_len = float(lenDomain)
+    count = Counter(i for i in domain).most_common()
+    entropy = -sum(j/f_len * (math.log(j / f_len)) for i, j in count)  # shannon entropy
+    y.append(entropy)
+  return y
 
 def get_aeiou(domain_list):
   x = []
   y = []
   for domain in domain_list:
    # print(domain)
-    x.append(len(domain))
+    lenDomain = len(domain)
+    x.append(lenDomain)
     count = len(re.findall(r'[aeiou]',domain.lower()))
-    count = (0.0 + count)/len(domain)
+    count = (0.0 + count)/lenDomain
     y.append(count)
   return x,y
 
 
 def get_uniq_char_num(domain_list):
-  x = []
   y = []
   for domain in domain_list:
-    x.append(len(domain))
+    lenDomain = len(domain)
     count = len(set(domain))
-    count = (0.0+count)/len(domain)
+    count = (0.0+count)/lenDomain
     y.append(count)
   return y
 
@@ -51,7 +70,7 @@ if __name__ == '__main__':
 
     print('*************')
     fp = open('wubaoDNS.txt',  'r')
-    #fp = open('test1.txt', 'w+')
+    #fp = open('test1.txt', 'r')
     uris = fp.readlines()
     for uri in uris:
         uriPrint = uri.strip('\n')
@@ -74,14 +93,26 @@ if __name__ == '__main__':
         AEIOUs = AEIOUs.reshape(urisCount, 1)
         AEIOUs = sparse.csr_matrix(AEIOUs)
 
-   # 拼接不重复字符特征到最后一列
-        uniq_char_num = get_uniq_char_num(df)
-        uniq_char_num = np.array(uniq_char_num)
-        uniq_char_num = uniq_char_num.reshape(urisCount, 1)
-        uniq_char_num = sparse.csr_matrix(uniq_char_num)
+        # 拼接不重复字符特征到最后一列
+        #    uniq_char_num = get_uniq_char_num(df)
+        #    uniq_char_num = np.array(uniq_char_num)
+        #    uniq_char_num = uniq_char_num.reshape(urisCount, 1)
+        #    uniq_char_num = sparse.csr_matrix(uniq_char_num)
 
-# total = np.array(0)
-        total = scipy.sparse.hstack((n_grams_tfidf, AEIOUs, uniq_char_num), format='csr')
+
+        # 香浓熵作为特征
+        Feashanon = calShanon(df)
+        Feashanon = np.array(Feashanon)
+        Feashanon = Feashanon.reshape(urisCount, 1)
+        Feashanon = sparse.csr_matrix(Feashanon)
+
+        # 域名长度作为特征
+ #       Fealen = get_domain_legnth(df)
+   #     Fealen = np.array(Fealen)
+   #     Fealen = Fealen.reshape(urisCount, 1)
+   #     Fealen = sparse.csr_matrix(Fealen)
+
+        total = scipy.sparse.hstack((n_grams_tfidf, AEIOUs, Feashanon), format='csr')
 
         predicted = model.predict(total)
        # print(time.time())

@@ -1,13 +1,14 @@
 #encoding=utf-8
 import importlib,sys
-#importlib.reload(sys)
 import sys
 import pandas as pd
-#from sklearn.model_selection import train_test_split
+from sklearn.cross_validation import train_test_split
 from sklearn.externals import joblib
 from sklearn.ensemble import RandomForestClassifier
 import numpy as np
 #import gib_detect_train
+import pickle
+import scipy
 import pickle
 import scipy
 import re
@@ -56,51 +57,41 @@ def get_uniq_char_num(domain_list):
     y.append(count)
   return y
 
-if __name__ == '__main__':
-  #  model_data = pickle.load(open('gib_model.pki', 'rb'))
 
-   # df = pd.read_csv('dgaNOcom.csv',encoding='utf-8')
-  #  df1 = pd.read_csv('dga.csv', encoding='utf-8')
-  #  print(df1['label'][0])
+
+if __name__ == '__main__':
     df1 = pd.read_csv('dnsW.csv', encoding='utf-8')
     df2 = pd.read_csv('dnsB.csv', encoding='utf-8')
     frames = [df1, df2]
     df = pd.concat(frames,keys=['uri','label'])
 
-
     print(len(df['uri']))
     print(df['uri'][1])
-    print(df['uri'][15])
+    print(df['uri'][150])
     print('########################')
 
+    from sklearn.feature_extraction.text import CountVectorizer, TfidfTransformer, TfidfVectorizer
 
-
-    print('????????????????????????')
-    attributes = ['uri', 'label']
-
-
-
-    from sklearn.feature_extraction.text import CountVectorizer, TfidfTransformer,TfidfVectorizer
-
-    tv = TfidfVectorizer(analyzer='char',ngram_range={2,3})
+    tv = TfidfVectorizer(analyzer='char', ngram_range={2, 3})
     n_grams_tfidf = tv.fit_transform(df['uri'].values.astype('U'))
-    #稀疏矩阵转为narray
-   # n_grams_tfidf = n_grams_tfidf.toarray()
+    # 稀疏矩阵转为narray
+    # n_grams_tfidf = n_grams_tfidf.toarray()
     # 拼接AEIOU特征到最后一列
     urisCount, AEIOUs = get_aeiou(df['uri'])
     AEIOUs = np.array(AEIOUs)
     urisCount = len(urisCount)
-    AEIOUs = AEIOUs.reshape(urisCount,1)
+    AEIOUs = AEIOUs.reshape(urisCount, 1)
     AEIOUs = sparse.csr_matrix(AEIOUs)
 
-  # 拼接不重复字符特征到最后一列
-  #    uniq_char_num = get_uniq_char_num(df['uri'])
-  #    uniq_char_num = np.array(uniq_char_num)
-  #    uniq_char_num = uniq_char_num.reshape(urisCount, 1)
-  #    uniq_char_num = sparse.csr_matrix(uniq_char_num)
+
+    # 拼接不重复字符特征到最后一列
+#    uniq_char_num = get_uniq_char_num(df['uri'])
+#    uniq_char_num = np.array(uniq_char_num)
+#    uniq_char_num = uniq_char_num.reshape(urisCount, 1)
+#    uniq_char_num = sparse.csr_matrix(uniq_char_num)
 
 
-      # 香浓熵作为特征
+#香浓熵作为特征
     Feashanon = calShanon(df['uri'])
     Feashanon = np.array(Feashanon)
     Feashanon = Feashanon.reshape(urisCount, 1)
@@ -108,30 +99,34 @@ if __name__ == '__main__':
 
     # 域名长度作为特征
    # Fealen = get_domain_legnth(df['uri'])
-  #  Fealen = np.array(Fealen)
+   # Fealen = np.array(Fealen)
   #  Fealen = Fealen.reshape(urisCount, 1)
   #  Fealen = sparse.csr_matrix(Fealen)
 
     total = scipy.sparse.hstack((n_grams_tfidf, AEIOUs, Feashanon), format='csr')
+   # pca = PCA(n_components=0.95)
+   # pca_total = pca.fit_transform(total)
+    print('????????????????????????')
+    attributes = ['uri', 'label']
+    x_train, x_test, y_train, y_test = train_test_split(total, df['label'], test_size=0.5,
+                                                        stratify=df['label'], random_state=0)
 
-
-
-
-
-    print(type(total[0]))
-    print((total[0]))
 
     from sklearn.tree import DecisionTreeClassifier
 
-    print('start make model')
-    #clf = DecisionTreeClassifier(random_state=0).fit(n_grams_tfidf, df['label'])
-    clf = DecisionTreeClassifier(random_state=0).fit(total, df['label'])
+    clf = RandomForestClassifier().fit(x_train, y_train)
+   # clf = DecisionTreeClassifier(random_state=0).fit(x_train, y_train)
+    #from sklearn.svm import SVC
+    #clf = SVC().fit(x_train, y_train)
+    from sklearn.metrics import accuracy_score
 
+    test_predicted = clf.predict(x_test)
+    print("DeciTreeClassifier accuracy:", accuracy_score(y_test, test_predicted))
 
     from sklearn.externals import joblib
-    joblib.dump(clf,'total.pkl')
+  #  joblib.dump(clf,'mix360.pkl')
 
-    joblib.dump(tv, "total.m")
+  #  joblib.dump(tv, "mix360.m")
   #  x = '12345'
 
   #  print(clf.predict(x))
