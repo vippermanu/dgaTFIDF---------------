@@ -7,6 +7,36 @@ from sklearn.feature_extraction.text import CountVectorizer, TfidfTransformer, T
 from sklearn.metrics import accuracy_score
 import re
 import time
+import numpy as np
+#import gib_detect_train
+import pickle
+import scipy
+import re
+from scipy.sparse import csr_matrix
+from scipy import sparse
+
+
+def get_aeiou(domain_list):
+  x = []
+  y = []
+  for domain in domain_list:
+   # print(domain)
+    x.append(len(domain))
+    count = len(re.findall(r'[aeiou]',domain.lower()))
+    count = (0.0 + count)/len(domain)
+    y.append(count)
+  return x,y
+
+
+def get_uniq_char_num(domain_list):
+  x = []
+  y = []
+  for domain in domain_list:
+    x.append(len(domain))
+    count = len(set(domain))
+    count = (0.0+count)/len(domain)
+    y.append(count)
+  return y
 
 if __name__ == '__main__':
 
@@ -16,8 +46,8 @@ if __name__ == '__main__':
 #为了解决测试集vocabulary维度不同，先加载训练集的vocabulary
     #参考文章http://blog.csdn.net/u013083549/article/details/51262721?locationNum=2
     pattern = re.compile(r'(\w|\d)*\.(com|net|cn|org|cc|gov|edu\.cn|cc|co|\w{1,10})$')
-    tv = joblib.load('py27mix360.m')
-    model = joblib.load('py27mix360.pkl')
+    tv = joblib.load('total.m')
+    model = joblib.load('total.pkl')
 
     print('*************')
     fp = open('wubaoDNS.txt',  'r')
@@ -38,9 +68,22 @@ if __name__ == '__main__':
         df.append(uri)
         n_grams_tfidf = tv.transform(df)
 
+        urisCount, AEIOUs = get_aeiou(df)
+        AEIOUs = np.array(AEIOUs)
+        urisCount = len(urisCount)
+        AEIOUs = AEIOUs.reshape(urisCount, 1)
+        AEIOUs = sparse.csr_matrix(AEIOUs)
 
+   # 拼接不重复字符特征到最后一列
+        uniq_char_num = get_uniq_char_num(df)
+        uniq_char_num = np.array(uniq_char_num)
+        uniq_char_num = uniq_char_num.reshape(urisCount, 1)
+        uniq_char_num = sparse.csr_matrix(uniq_char_num)
 
-        predicted = model.predict(n_grams_tfidf)
+# total = np.array(0)
+        total = scipy.sparse.hstack((n_grams_tfidf, AEIOUs, uniq_char_num), format='csr')
+
+        predicted = model.predict(total)
        # print(time.time())
         if (predicted):
 
