@@ -1,4 +1,4 @@
-﻿#encoding=utf-8
+#encoding=utf-8
 import importlib,sys
 #importlib.reload(sys)
 import sys
@@ -125,7 +125,7 @@ if __name__ == '__main__':
 
     print('start make model')
     #clf = DecisionTreeClassifier(random_state=0).fit(n_grams_tfidf, df['label'])
-    clf = RandomForestClassifier().fit(x_train, y_train)
+    clf = RandomForestClassifier().fit(total, df['label'])
 
 
     from sklearn.externals import joblib
