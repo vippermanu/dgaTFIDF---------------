@@ -17,6 +17,7 @@ from scipy import sparse
 from collections import Counter
 import math
 from sklearn.ensemble import RandomForestClassifier
+from sklearn import ensemble
 
 def get_domain_legnth(domain_list):
   y = []
@@ -114,14 +115,17 @@ if __name__ == '__main__':
 
     from sklearn.tree import DecisionTreeClassifier
 
-    clf = RandomForestClassifier().fit(x_train, y_train)
+   # clf = RandomForestClassifier().fit(x_train, y_train)
+    clf = ensemble.AdaBoostClassifier(learning_rate=1, n_estimators=200).fit(x_train, y_train)
    # clf = DecisionTreeClassifier(random_state=0).fit(x_train, y_train)
     #from sklearn.svm import SVC
     #clf = SVC().fit(x_train, y_train)
     from sklearn.metrics import accuracy_score
 
     test_predicted = clf.predict(x_test)
-    print("DeciTreeClassifier accuracy:", accuracy_score(y_test, test_predicted))
+    #print("DeciTreeClassifier accuracy:", accuracy_score(y_test, test_predicted))
+    print("AdaBoostClassifier accuracy:", accuracy_score(y_test, test_predicted))
+
 
     from sklearn.externals import joblib
   #  joblib.dump(clf,'mix360.pkl')
