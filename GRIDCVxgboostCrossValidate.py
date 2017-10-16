@@ -123,7 +123,7 @@ if __name__ == '__main__':
    # clf = DecisionTreeClassifier(random_state=0).fit(x_train, y_train)
     #from sklearn.svm import SVC
     #clf = SVC().fit(x_train, y_train)
-    clf = XGBClassifier(learning_rate =1)
+    clf = XGBClassifier()
     clf.fit(x_train, y_train)
     plot_importance(clf,max_num_features=50)
     pyplot.show()
@@ -131,8 +131,8 @@ if __name__ == '__main__':
 
     test_predicted = clf.predict(x_test)
     #print("DeciTreeClassifier accuracy:", accuracy_score(y_test, test_predicted))
-    print("xgboostClassifier accuracy:", accuracy_score(y_test, test_predicted))
-'''
+    print("AdaBoostClassifier accuracy:", accuracy_score(y_test, test_predicted))
+
     from sklearn.model_selection import GridSearchCV
     from sklearn.model_selection import StratifiedKFold
     model = XGBClassifier()
@@ -162,5 +162,4 @@ if __name__ == '__main__':
 
 
    # n_grams_dev = count_vectorizer.transform(x_dev['uri'])
-   #  print('Number of features:', len(count_vectorizer.vocabulary_))
-'''
+  #  print('Number of features:', len(count_vectorizer.vocabulary_))
