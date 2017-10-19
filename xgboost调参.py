@@ -118,49 +118,35 @@ if __name__ == '__main__':
 
     from sklearn.tree import DecisionTreeClassifier
 
-   # clf = RandomForestClassifier().fit(x_train, y_train)
-    #clf = ensemble.AdaBoostClassifier(learning_rate=1, n_estimators=500).fit(x_train, y_train)
-   # clf = DecisionTreeClassifier(random_state=0).fit(x_train, y_train)
-    #from sklearn.svm import SVC
-    #clf = SVC().fit(x_train, y_train)
-    clf = XGBClassifier(learning_rate =1)
-    clf.fit(x_train, y_train)
-    plot_importance(clf,max_num_features=50)
-    pyplot.show()
-    from sklearn.metrics import accuracy_score
+    # Grid seach on subsample and max_features
+    # Choose all predictors except target & IDcols
+    tuned_parameters = {
+        'learning_rate': [0.9, 1, 1.1]
+        'n_estimators': [50,100]
+    }
+    from sklearn.grid_search import GridSearchCV
 
-    test_predicted = clf.predict(x_test)
-    #print("DeciTreeClassifier accuracy:", accuracy_score(y_test, test_predicted))
-    print("xgboostClassifier accuracy:", accuracy_score(y_test, test_predicted))
-'''
-    from sklearn.model_selection import GridSearchCV
-    from sklearn.model_selection import StratifiedKFold
-    model = XGBClassifier()
-    learning_rate = [0.0001, 0.001, 0.01, 0.1, 0.2, 0.3]
-    param_grid = dict(learning_rate=learning_rate)
-    kfold = StratifiedKFold(n_splits=10, shuffle=True, random_state=7)
-    grid_search = GridSearchCV(model, param_grid, scoring="neg_log_loss", n_jobs=-1, cv=kfold)
-    grid_result = grid_search.fit(total, df['label'])
+    scores = ['precision', 'recall']
+    # import GridSearchC
+    for score in scores:
+        print("# Tuning hyper-parameters for %s" % score)
+        print()
+
+        clf = GridSearchCV(XGBClassifier(), tuned_parameters, cv=5, scoring='%s_weighted' % score)
+
+        clf.fit(x_train, y_train)
 
 
-   # eval_set = [(x_test, y_test)]
-    #clf.fit(x_train, y_train, early_stopping_rounds=10, eval_metric="logloss", eval_set=eval_set, verbose=True)
+        print("Best parameters set found on development set:")
 
-    from sklearn.externals import joblib
-  #  joblib.dump(clf,'mix360.pkl')
+        print(clf.best_params_)
 
-  #  joblib.dump(tv, "mix360.m")
-  #  x = '12345'
+        print("Grid scores on development set:")
 
-  #  print(clf.predict(x))
+        for params, mean_score, scores in clf.grid_scores_:
+            print("%0.3f (+/-%0.03f) for %r"% (mean_score, scores.std() * 2, params))
+            print()
 
 
 
-   # n_grams_train = count_vectorizer.fit_transform(x_train['uri'])
-   # n_grams_dev = count_vectorizer.transform(x_dev['uri'])
 
-
-
-   # n_grams_dev = count_vectorizer.transform(x_dev['uri'])
-   #  print('Number of features:', len(count_vectorizer.vocabulary_))
-'''
