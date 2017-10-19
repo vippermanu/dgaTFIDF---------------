@@ -64,8 +64,8 @@ def get_uniq_char_num(domain_list):
 
 
 if __name__ == '__main__':
-    df1 = pd.read_csv('dnsW.csv', encoding='utf-8')
-    df2 = pd.read_csv('dnsB.csv', encoding='utf-8')
+    df1 = pd.read_csv('whitelist.csv', encoding='utf-8')
+    df2 = pd.read_csv('blacklist.csv', encoding='utf-8')
     frames = [df1, df2]
     df = pd.concat(frames,keys=['uri','label'])
 
@@ -123,44 +123,12 @@ if __name__ == '__main__':
    # clf = DecisionTreeClassifier(random_state=0).fit(x_train, y_train)
     #from sklearn.svm import SVC
     #clf = SVC().fit(x_train, y_train)
-    clf = XGBClassifier(learning_rate =1)
+    clf = XGBClassifier(learning_rate = 0.1 )
     clf.fit(x_train, y_train)
-    plot_importance(clf,max_num_features=50)
-    pyplot.show()
+   # plot_importance(clf,max_num_features=50)
+   # pyplot.show()
     from sklearn.metrics import accuracy_score
 
     test_predicted = clf.predict(x_test)
     #print("DeciTreeClassifier accuracy:", accuracy_score(y_test, test_predicted))
     print("xgboostClassifier accuracy:", accuracy_score(y_test, test_predicted))
-'''
-    from sklearn.model_selection import GridSearchCV
-    from sklearn.model_selection import StratifiedKFold
-    model = XGBClassifier()
-    learning_rate = [0.0001, 0.001, 0.01, 0.1, 0.2, 0.3]
-    param_grid = dict(learning_rate=learning_rate)
-    kfold = StratifiedKFold(n_splits=10, shuffle=True, random_state=7)
-    grid_search = GridSearchCV(model, param_grid, scoring="neg_log_loss", n_jobs=-1, cv=kfold)
-    grid_result = grid_search.fit(total, df['label'])
-
-
-   # eval_set = [(x_test, y_test)]
-    #clf.fit(x_train, y_train, early_stopping_rounds=10, eval_metric="logloss", eval_set=eval_set, verbose=True)
-
-    from sklearn.externals import joblib
-  #  joblib.dump(clf,'mix360.pkl')
-
-  #  joblib.dump(tv, "mix360.m")
-  #  x = '12345'
-
-  #  print(clf.predict(x))
-
-
-
-   # n_grams_train = count_vectorizer.fit_transform(x_train['uri'])
-   # n_grams_dev = count_vectorizer.transform(x_dev['uri'])
-
-
-
-   # n_grams_dev = count_vectorizer.transform(x_dev['uri'])
-   #  print('Number of features:', len(count_vectorizer.vocabulary_))
-'''
