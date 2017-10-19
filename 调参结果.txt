@@ -63,3 +63,38 @@ Grid scores on development set:
 ()
 # Tuning hyper-parameters for recall
 ()
+
+
+
+
+"C:\Program Files\Anaconda2\python.exe" C:/Users/yueli/Documents/GitHub/dga2.7/newFeature/xgboostµ÷²Î.py
+100561
+youtube
+google
+########################
+????????????????????????
+# Tuning hyper-parameters for precision
+()
+Best parameters set found on development set:
+{'n_estimators': 250, 'learning_rate': 1}
+Grid scores on development set:
+0.949 (+/-0.003) for {'n_estimators': 100, 'learning_rate': 0.5}
+()
+0.960 (+/-0.005) for {'n_estimators': 200, 'learning_rate': 0.5}
+()
+0.963 (+/-0.003) for {'n_estimators': 250, 'learning_rate': 0.5}
+()
+0.955 (+/-0.004) for {'n_estimators': 100, 'learning_rate': 1}
+()
+0.964 (+/-0.004) for {'n_estimators': 200, 'learning_rate': 1}
+()
+0.964 (+/-0.003) for {'n_estimators': 250, 'learning_rate': 1}
+()
+0.860 (+/-0.030) for {'n_estimators': 100, 'learning_rate': 1.5}
+()
+0.683 (+/-0.463) for {'n_estimators': 200, 'learning_rate': 1.5}
+()
+0.683 (+/-0.463) for {'n_estimators': 250, 'learning_rate': 1.5}
+()
+# Tuning hyper-parameters for recall
+()
