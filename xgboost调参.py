@@ -121,7 +121,7 @@ if __name__ == '__main__':
     # Grid seach on subsample and max_features
     # Choose all predictors except target & IDcols
     tuned_parameters = {
-        'learning_rate': [0.9, 1, 1.1]
+        'learning_rate': [0.9, 1, 1.1],
         'n_estimators': [50,100]
     }
     from sklearn.grid_search import GridSearchCV
