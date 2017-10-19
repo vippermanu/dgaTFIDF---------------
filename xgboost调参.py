@@ -132,7 +132,7 @@ if __name__ == '__main__':
         print("# Tuning hyper-parameters for %s" % score)
         print()
 
-        clf = GridSearchCV(XGBClassifier(), tuned_parameters, cv=5, scoring='%s_weighted' % score)
+        clf = GridSearchCV(XGBClassifier(n_jobs=4), tuned_parameters, cv=5, scoring='%s_weighted' % score)
 
         clf.fit(x_train, y_train)
 
