@@ -7,6 +7,66 @@ google
 # Tuning hyper-parameters for precision
 ()
 Best parameters set found on development set:
+{'n_estimators': 1000, 'learning_rate': 1}
+Grid scores on development set:
+0.969 (+/-0.005) for {'n_estimators': 600, 'learning_rate': 1}
+()
+0.970 (+/-0.005) for {'n_estimators': 1000, 'learning_rate': 1}
+()
+0.970 (+/-0.005) for {'n_estimators': 1200, 'learning_rate': 1}
+()
+0.970 (+/-0.005) for {'n_estimators': 1500, 'learning_rate': 1}
+()
+# Tuning hyper-parameters for recall
+()
+Best parameters set found on development set:
+{'n_estimators': 1000, 'learning_rate': 1}
+Grid scores on development set:
+0.969 (+/-0.005) for {'n_estimators': 600, 'learning_rate': 1}
+()
+0.970 (+/-0.005) for {'n_estimators': 1000, 'learning_rate': 1}
+()
+0.970 (+/-0.005) for {'n_estimators': 1200, 'learning_rate': 1}
+()
+0.970 (+/-0.005) for {'n_estimators': 1500, 'learning_rate': 1}
+()
+
+Process finished with exit code 0
+
+
+
+"C:\Program Files\Anaconda2\python.exe" C:/Users/yueli/Documents/GitHub/dga2.7/newFeature/xgboost调参.py
+100561
+youtube
+google
+########################
+????????????????????????
+# Tuning hyper-parameters for precision
+()
+Best parameters set found on development set:
+{'n_estimators': 1000, 'learning_rate': 1}
+Grid scores on development set:
+0.966 (+/-0.004) for {'n_estimators': 350, 'learning_rate': 1}
+()
+0.969 (+/-0.003) for {'n_estimators': 450, 'learning_rate': 1}
+()
+0.969 (+/-0.004) for {'n_estimators': 550, 'learning_rate': 1}
+()
+0.970 (+/-0.005) for {'n_estimators': 1000, 'learning_rate': 1}
+()
+# Tuning hyper-parameters for recall
+()
+
+
+"C:\Program Files\Anaconda2\python.exe" C:/Users/yueli/Documents/GitHub/dga2.7/newFeature/xgboost调参.py
+100561
+youtube
+google
+########################
+????????????????????????
+# Tuning hyper-parameters for precision
+()
+Best parameters set found on development set:
 {'n_estimators': 100, 'learning_rate': 1}
 Grid scores on development set:
 0.942 (+/-0.006) for {'n_estimators': 50, 'learning_rate': 0.9}

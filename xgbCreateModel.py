@@ -1,4 +1,4 @@
-#encoding=utf-8
+﻿#encoding=utf-8
 import importlib,sys
 #importlib.reload(sys)
 import sys
@@ -101,7 +101,7 @@ if __name__ == '__main__':
 
     print('start make model')
 
-    clf = XGBClassifier(learning_rate=1)
+    clf = XGBClassifier(learning_rate=1, n_estimators = 550, n_jobs=4)
     clf.fit(total, df['label'])
 
 
